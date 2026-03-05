@@ -2,6 +2,8 @@ package com.massrofi.sigservice_posts.ui.detail;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,23 +22,7 @@ import android.view.ViewGroup;
 
 public class PostDetailFragment extends Fragment {
 
-    // Keys for the Bundle
-    private static final String ARG_POST_ID = "post_id";
-    private static final String ARG_POST_TITLE = "post_title";
-
-    private int mPostId;
-    private String mPostTitle;
-
-    private FragmentPostDetailBinding binding;
-    private PostViewModel viewModel;
-
-    public PostDetailFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Updated Factory Method to pass the ID and Title
-     */
+    // Inside PostDetailFragment.java
     public static PostDetailFragment newInstance(int postId, String postTitle) {
         PostDetailFragment fragment = new PostDetailFragment();
         Bundle args = new Bundle();
@@ -45,6 +31,21 @@ public class PostDetailFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    private static final String ARG_POST_ID = "post_id";
+    private static final String ARG_POST_TITLE = "post_title";
+
+    // Font scale constants
+    private static final float FONT_STEP = 2.0f;
+    private static final float MIN_FONT_SIZE = 12.0f;
+    private static final float MAX_FONT_SIZE = 32.0f;
+
+    private int mPostId;
+    private String mPostTitle;
+    private float mCurrentFontSize = 16.0f; // Default size in sp
+
+    private FragmentPostDetailBinding binding;
+    private PostViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,27 +57,23 @@ public class PostDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Use ViewBinding for cleaner UI access
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // This part is crucial: it actually creates the UI on the screen
         binding = FragmentPostDetailBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Set the title immediately (passed from the list)
         binding.tvDetailTitle.setText(mPostTitle);
-
-        // 2. Initialize ViewModel (Shared with Activity)
         viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
 
-        // 3. Observe the specific post data from the API
+        // 1. Observe Data
         viewModel.getSinglePostData().observe(getViewLifecycleOwner(), result -> {
             if (result == null) return;
-
             switch (result.status) {
                 case LOADING:
                     binding.progressBar.setVisibility(View.VISIBLE);
@@ -94,11 +91,37 @@ public class PostDetailFragment extends Fragment {
             }
         });
 
-        // 4. Trigger the network call for this specific post
+        // 2. Trigger Network Call
         viewModel.loadPostById(mPostId);
 
-        // 5. Back Button Logic
+        // 3. Setup Font Controls
+        setupFontControls();
+
+        // 4. Back Button Logic
         binding.btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+    }
+
+    private void setupFontControls() {
+        // Increase Font Size
+        binding.btnIncreaseFont.setOnClickListener(v -> {
+            if (mCurrentFontSize < MAX_FONT_SIZE) {
+                mCurrentFontSize += FONT_STEP;
+                updateTextSize();
+            }
+        });
+
+        // Decrease Font Size
+        binding.btnDecreaseFont.setOnClickListener(v -> {
+            if (mCurrentFontSize > MIN_FONT_SIZE) {
+                mCurrentFontSize -= FONT_STEP;
+                updateTextSize();
+            }
+        });
+    }
+
+    private void updateTextSize() {
+        // setTextSize(unit, size) -> TypedValue.COMPLEX_UNIT_SP is preferred
+        binding.tvDetailBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, mCurrentFontSize);
     }
 
     @Override

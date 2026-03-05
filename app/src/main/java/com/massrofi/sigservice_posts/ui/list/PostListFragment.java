@@ -89,8 +89,16 @@ public class PostListFragment extends Fragment {
     }
 
     private void navigateToDetail(Post post) {
-        // Use the ID and Title as you planned
-        PostDetailFragment detailFragment = PostDetailFragment.newInstance(post.getId(), post.getTitle());
+        // 1. Safety check to ensure the post object isn't null
+        if (post == null) return;
+
+        // 2. Use the updated Factory Method with both ID and Title
+        PostDetailFragment detailFragment = PostDetailFragment.newInstance(
+                post.getId(),
+                post.getTitle()
+        );
+
+        // 3. Cast and execute the fragment swap
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).loadFragment(detailFragment, true);
         }

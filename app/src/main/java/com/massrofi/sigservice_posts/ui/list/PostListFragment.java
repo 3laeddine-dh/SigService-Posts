@@ -73,12 +73,26 @@ public class PostListFragment extends Fragment {
         // Click listeners
         binding.btnRetry.setOnClickListener(v -> viewModel.loadPosts());
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.loadPosts());
-        binding.btnLogout.setOnClickListener(v -> ((MainActivity)requireActivity()).performLogout());
+        binding.btnLogout.setOnClickListener(v -> showLogoutConfirmation());
 
         // STEP 5: Trigger initial load if data is empty
         if (viewModel.getPostsData().getValue() == null) {
             viewModel.loadPosts();
         }
+    }
+
+    private void showLogoutConfirmation() {
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to exit ?")
+                .setPositiveButton("Logout", (dialog, which) -> {
+                    // Execute the actual logout logic in MainActivity
+                    if (getActivity() instanceof MainActivity) {
+                        ((MainActivity) requireActivity()).performLogout();
+                    }
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void setupRecyclerView() {

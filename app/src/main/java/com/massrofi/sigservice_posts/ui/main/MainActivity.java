@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.massrofi.sigservice_posts.R;
 import com.massrofi.sigservice_posts.databinding.ActivityMainBinding;
@@ -44,14 +45,17 @@ public class MainActivity extends AppCompatActivity {
      * @param addToBackStack True if want to allow the "Back" button to return
      */
     public void loadFragment(Fragment fragment, boolean addToBackStack) {
-        var transaction = getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        if (addToBackStack) {
-            transaction.addToBackStack(null);
-        }
+        transaction.setCustomAnimations(
+                R.anim.slide_in_right,  // enter
+                R.anim.slide_out_left,  // exit
+                R.anim.slide_in_left,   // popEnter
+                R.anim.slide_out_right  // popExit
+        );
 
+        transaction.replace(R.id.fragment_container, fragment);
+        if (addToBackStack) transaction.addToBackStack(null);
         transaction.commit();
     }
 

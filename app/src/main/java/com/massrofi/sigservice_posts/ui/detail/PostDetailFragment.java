@@ -1,24 +1,32 @@
 package com.massrofi.sigservice_posts.ui.detail;
 
 import android.os.Bundle;
+
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.massrofi.sigservice_posts.R;
 import com.massrofi.sigservice_posts.databinding.FragmentPostDetailBinding;
 import com.massrofi.sigservice_posts.ui.PostViewModel;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 public class PostDetailFragment extends Fragment {
 
@@ -67,6 +75,7 @@ public class PostDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setFullScreen(true);
 
         binding.tvDetailTitle.setText(mPostTitle);
         viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
@@ -127,6 +136,24 @@ public class PostDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        setFullScreen(false);
         binding = null;
+    }
+
+    private void setFullScreen(boolean isFull) {
+        if (getActivity() == null) return;
+
+        Window window = getActivity().getWindow();
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(window, window.getDecorView());
+
+        if (isFull) {
+            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+            windowInsetsController.setSystemBarsBehavior(
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        } else {
+            // Show the bars again
+            windowInsetsController.show(WindowInsetsCompat.Type.systemBars());
+        }
     }
 }

@@ -30,7 +30,7 @@ import android.view.Window;
 
 public class PostDetailFragment extends Fragment {
 
-    // Inside PostDetailFragment.java
+
     public static PostDetailFragment newInstance(int postId, String postTitle) {
         PostDetailFragment fragment = new PostDetailFragment();
         Bundle args = new Bundle();
@@ -66,8 +66,7 @@ public class PostDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // This part is crucial: it actually creates the UI on the screen
-        binding = FragmentPostDetailBinding.inflate(inflater, container, false);
+         binding = FragmentPostDetailBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -80,7 +79,7 @@ public class PostDetailFragment extends Fragment {
         binding.tvDetailTitle.setText(mPostTitle);
         viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
 
-        // 1. Observe Data
+        //   Observe Data
         viewModel.getSinglePostData().observe(getViewLifecycleOwner(), result -> {
             if (result == null) return;
             switch (result.status) {
@@ -100,13 +99,13 @@ public class PostDetailFragment extends Fragment {
             }
         });
 
-        // 2. Trigger Network Call
+        //   Trigger Network Call
         viewModel.loadPostById(mPostId);
 
-        // 3. Setup Font Controls
+        //   Setup Font Controls
         setupFontControls();
 
-        // 4. Back Button Logic
+        //   Back Button Logic
         binding.btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
     }
 
@@ -129,8 +128,7 @@ public class PostDetailFragment extends Fragment {
     }
 
     private void updateTextSize() {
-        // setTextSize(unit, size) -> TypedValue.COMPLEX_UNIT_SP is preferred
-        binding.tvDetailBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, mCurrentFontSize);
+         binding.tvDetailBody.setTextSize(TypedValue.COMPLEX_UNIT_SP, mCurrentFontSize);
     }
 
     @Override
@@ -152,8 +150,7 @@ public class PostDetailFragment extends Fragment {
             windowInsetsController.setSystemBarsBehavior(
                     WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         } else {
-            // Show the bars again
-            windowInsetsController.show(WindowInsetsCompat.Type.systemBars());
+             windowInsetsController.show(WindowInsetsCompat.Type.systemBars());
         }
     }
 }

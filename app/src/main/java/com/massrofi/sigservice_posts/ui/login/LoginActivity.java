@@ -50,14 +50,14 @@ public class LoginActivity extends AppCompatActivity {
                 String login = binding.etLogin.getText().toString().trim();
                 String password = binding.etPassword.getText().toString().trim();
 
-                // 1. Enable/Disable button based on input
+
                 boolean isEnabled = !login.isEmpty() && !password.isEmpty();
                 binding.btnConnect.setEnabled(isEnabled);
 
-                // 2. Adjust Alpha for visual feedback
+
                 binding.btnConnect.setAlpha(isEnabled ? 1.0f : 0.5f);
 
-                // 3. Clear errors as soon as user starts typing
+
                 if (!login.isEmpty()) binding.loginLayout.setError(null);
                 if (!password.isEmpty()) binding.passwordLayout.setError(null);
             }
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Show a simple loading state (Optional Pro touch)
+
         binding.btnConnect.setText("Connecting...");
         binding.btnConnect.setEnabled(false);
 
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
 
-        // Remove from backstack so user can't "Go Back" to login
+
         finish();
     }
 }

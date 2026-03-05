@@ -4,6 +4,7 @@ package com.massrofi.sigservice_posts.ui.list;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +19,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private List<Post> postList = new ArrayList<>();
     private final OnPostClickListener listener;
 
-    // Interface to handle clicks in the Fragment
     public interface OnPostClickListener {
         void onPostClick(Post post);
     }
@@ -29,7 +29,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     public void setPosts(List<Post> posts) {
         this.postList = posts;
-        notifyDataSetChanged(); // For a test, this is fine. For production, DiffUtil is preferred.
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -44,11 +44,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = postList.get(position);
 
-        // 1. Force Pure White Background
+
         holder.binding.getRoot().setCardBackgroundColor(Color.WHITE);
         holder.binding.getRoot().setUseCompatPadding(true);
 
-        // 2. Set Content
+
         String originalTitle = post.getTitle();
         if (originalTitle != null && !originalTitle.isEmpty()) {
             StringBuilder capitalizedTitle = new StringBuilder();
@@ -76,8 +76,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         // Apply to Avatar
         holder.binding.avatarCard.setCardBackgroundColor(bgColors[colorIndex]);
-//        holder.binding.ivArticleIcon.setColorFilter(iconColors[colorIndex]);
-//
+
 
         holder.binding.chipCounter.setChipBackgroundColor(
                 android.content.res.ColorStateList.valueOf(bgColors[colorIndex])

@@ -42,16 +42,12 @@ public class PostListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // STEP 2: Initialize the RecyclerView BEFORE observing data
-        setupRecyclerView();
+         setupRecyclerView();
 
-        // STEP 3: Get the ViewModel
-        viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
+         viewModel = new ViewModelProvider(requireActivity()).get(PostViewModel.class);
 
-        // STEP 4: Observe Data State
-        viewModel.getPostsData().observe(getViewLifecycleOwner(), result -> {
-            // Check if binding is null to avoid crashes during transitions
-            if (binding == null) return;
+         viewModel.getPostsData().observe(getViewLifecycleOwner(), result -> {
+             if (binding == null) return;
 
             binding.swipeRefresh.setRefreshing(result.status == NetworkResult.Status.LOADING);
 
@@ -75,8 +71,7 @@ public class PostListFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.loadPosts());
         binding.btnLogout.setOnClickListener(v -> showLogoutConfirmation());
 
-        // STEP 5: Trigger initial load if data is empty
-        if (viewModel.getPostsData().getValue() == null) {
+         if (viewModel.getPostsData().getValue() == null) {
             viewModel.loadPosts();
         }
     }
@@ -86,8 +81,7 @@ public class PostListFragment extends Fragment {
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to exit ?")
                 .setPositiveButton("Logout", (dialog, which) -> {
-                    // Execute the actual logout logic in MainActivity
-                    if (getActivity() instanceof MainActivity) {
+                     if (getActivity() instanceof MainActivity) {
                         ((MainActivity) requireActivity()).performLogout();
                     }
                 })
@@ -103,17 +97,14 @@ public class PostListFragment extends Fragment {
     }
 
     private void navigateToDetail(Post post) {
-        // 1. Safety check to ensure the post object isn't null
-        if (post == null) return;
+         if (post == null) return;
 
-        // 2. Use the updated Factory Method with both ID and Title
-        PostDetailFragment detailFragment = PostDetailFragment.newInstance(
+         PostDetailFragment detailFragment = PostDetailFragment.newInstance(
                 post.getId(),
                 post.getTitle()
         );
 
-        // 3. Cast and execute the fragment swap
-        if (getActivity() instanceof MainActivity) {
+         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).loadFragment(detailFragment, true);
         }
     }
